@@ -12,6 +12,11 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         public int renderTargetH;
         public int tileX;
         public int tileY;
+
+        public float fov;
+        public float size;
+        public float nearClipFactor;
+        public float farClipFactor;
     }
 
 
@@ -63,6 +68,8 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
             RenderTexture tempRenderTexture = RenderTexture.GetTemporary(renderTextureDesc);
             Camera camera = renderingData.cameraData.camera;
+            SetupCameraInfo(camera);
+
             var opaqueSortFlag = renderingData.cameraData.defaultOpaqueSortFlags;
             var opaquedrawSettings = CreateDrawRendererSettings(camera, opaqueSortFlag, rendererConfiguration, renderingData.supportsDynamicBatching);
 
@@ -104,9 +111,31 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
             RenderTexture.ReleaseTemporary(tempRenderTexture);
         }
-        private void Setup()
+        private void SetupCameraInfo(Camera camera)
         {
-            //cmd.SetViewProjectionMatrices(Matrix4x4.identity, Matrix4x4.identity);
+            camera.fieldOfView = drawInfo.fov;
+            float adjustedDistance = GetAdjustedDistance(drawInfo.fov, drawInfo.size);
+            camera.nearClipPlane = adjustedDistance - drawInfo.nearClipFactor * drawInfo.size;
+            camera.farClipPlane = adjustedDistance + drawInfo.farClipFactor * drawInfo.size;
+
+            camera.transform.position = new Vector3(0, 0, -adjustedDistance);
+            camera.transform.localRotation = Quaternion.identity;
+//            camera.aspect = 
+
+            //            camera.nearClipPlane;
+        }
+
+        public static float GetAdjustedDistance(float fov,float size)
+        {
+            return size / Mathf.Tan(fov * 0.5f * Mathf.Deg2Rad);
+        }
+
+        private void Setup(ScriptableRenderContext context, CommandBuffer cmd,
+            Camera camera,
+            int view, int numViews)
+        {
+            cmd.SetViewProjectionMatrices(Matrix4x4.identity, Matrix4x4.identity);
+            cmd.Clear();
         }
 
         public void Dispose()

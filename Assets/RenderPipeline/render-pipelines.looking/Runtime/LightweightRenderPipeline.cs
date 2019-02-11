@@ -76,6 +76,8 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             public bool supportsDynamicBatching { get; private set; }
             public bool mixedLightingSupported { get; private set; }
 
+            public LookingGlassInfo lookingGlassInfo { get; private set; }
+
             public static PipelineSettings Create(LookingGlassRenderPipelineAsset asset)
             {
                 var cache = new PipelineSettings();
@@ -110,7 +112,13 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 // Advanced settings
                 cache.supportsDynamicBatching = asset.supportsDynamicBatching;
                 cache.mixedLightingSupported = asset.supportsMixedLighting;
-                
+
+                // looking glass info
+                cache.lookingGlassInfo =  asset.lookingGlassInfo;
+
+//                drawInfo;
+
+
                 return cache;
             }
         }
@@ -301,7 +309,10 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             bool canSkipFrontToBackSorting = (camera.opaqueSortMode == OpaqueSortMode.Default && hasHSRGPU) || camera.opaqueSortMode == OpaqueSortMode.NoDistanceSort;
 
             cameraData.defaultOpaqueSortFlags = canSkipFrontToBackSorting ? noFrontToBackOpaqueFlags : commonOpaqueFlags;
+            // lookingGlassInfo 
+            cameraData.lookingGlassInfo = settings.lookingGlassInfo;
         }
+
 
         static void InitializeRenderingData(PipelineSettings settings, ref CameraData cameraData, ref CullResults cullResults,
             int maxVisibleAdditionalLights, int maxPerObjectAdditionalLights, out RenderingData renderingData)

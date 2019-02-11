@@ -122,11 +122,9 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             // GameView at LGRP
             if (!renderingData.cameraData.isSceneViewCamera)
             {
-                LookingGlassInfo info = new LookingGlassInfo();
-                info.renderTargetW = 4096;
-                info.renderTargetH = 4096;
-                info.tileX = 4;
-                info.tileY = 9;
+                LookingGlassInfo info = renderingData.cameraData.lookingGlassInfo;
+
+
 
 
                 m_LookingMultiTexturePass.Setup(tileTexture,ref info);

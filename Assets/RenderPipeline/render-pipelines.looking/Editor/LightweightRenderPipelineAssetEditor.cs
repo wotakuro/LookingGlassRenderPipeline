@@ -14,6 +14,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             public static GUIContent lightingSettingsText = EditorGUIUtility.TrTextContent("Lighting");
             public static GUIContent shadowSettingsText = EditorGUIUtility.TrTextContent("Shadows");
             public static GUIContent advancedSettingsText = EditorGUIUtility.TrTextContent("Advanced");
+            public static GUIContent lookingSettingsText = EditorGUIUtility.TrTextContent("LookingGlassRendering");
 
             // General
             public static GUIContent requireDepthTextureText = EditorGUIUtility.TrTextContent("Depth Texture", "If enabled the pipeline will generate camera's depth that can be bound in shaders as _CameraDepthTexture.");
@@ -49,6 +50,17 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
             public static GUIContent shaderVariantLogLevel = EditorGUIUtility.TrTextContent("Shader Variant Log Level", "Controls the level logging in of shader variants information is outputted when a build is performed. Information will appear in the Unity console when the build finishes.");
 
+            // Settings
+            public static GUIContent lgTileWidth = EditorGUIUtility.TrTextContent("tileWidth");
+            public static GUIContent lgTileHeight = EditorGUIUtility.TrTextContent("tileHeight");
+            public static GUIContent lgTileXNum = EditorGUIUtility.TrTextContent("tileXNum");
+            public static GUIContent lgTileYNum = EditorGUIUtility.TrTextContent("tileYNum");
+            public static GUIContent lgFov = EditorGUIUtility.TrTextContent("Fov");
+            public static GUIContent lgSize = EditorGUIUtility.TrTextContent("Size");
+            public static GUIContent lgNearClipFactor = EditorGUIUtility.TrTextContent("NearClipFactor");
+            public static GUIContent lgFarClipFactor = EditorGUIUtility.TrTextContent("FarClipFactor");
+
+
             // Dropdown menu options
             public static string[] mainLightOptions = { "Disabled", "Per Pixel" };
 
@@ -62,6 +74,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         bool m_LightingSettingsFoldout = false;
         bool m_ShadowSettingsFoldout = false;
         bool m_AdvancedSettingsFoldout = false;
+        bool m_LookingGlassSettingsFoldout = false;
 
         int k_MaxSupportedPerObjectLights = 4;
         float k_MinRenderScale = 0.1f;
@@ -98,6 +111,16 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         SerializedProperty m_MixedLightingSupportedProp;
 
         SerializedProperty m_ShaderVariantLogLevel;
+        // looking props
+
+        SerializedProperty m_lg_renderTargetW;
+        SerializedProperty m_lg_renderTargetH;
+        SerializedProperty m_lg_tileX;
+        SerializedProperty m_lg_tileY;
+        SerializedProperty m_lg_fov;
+        SerializedProperty m_lg_size;
+        SerializedProperty m_lg_nearClipFactor;
+        SerializedProperty m_lg_farClipFactor;
 
         internal static LightRenderingMode selectedLightRenderingMode;
 
@@ -110,6 +133,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             DrawLightingSettings();
             DrawShadowSettings();
             DrawAdvancedSettings();
+            DrawLookingGlassSettings();
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -144,6 +168,16 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
             m_ShaderVariantLogLevel = serializedObject.FindProperty("m_ShaderVariantLogLevel");
             selectedLightRenderingMode = (LightRenderingMode)m_AdditionalLightsRenderingModeProp.intValue;
+
+            // looking info
+            m_lg_renderTargetW = serializedObject.FindProperty("m_lg_renderTargetW"); 
+            m_lg_renderTargetH = serializedObject.FindProperty("m_lg_renderTargetH"); 
+            m_lg_tileX = serializedObject.FindProperty("m_lg_tileX"); 
+            m_lg_tileY = serializedObject.FindProperty("m_lg_tileY"); 
+            m_lg_fov = serializedObject.FindProperty("m_lg_fov"); 
+            m_lg_size = serializedObject.FindProperty("m_lg_size"); 
+            m_lg_nearClipFactor = serializedObject.FindProperty("m_lg_nearClipFactor"); 
+            m_lg_farClipFactor = serializedObject.FindProperty("m_lg_farClipFactor"); 
         }
 
         void DrawGeneralSettings()
@@ -264,6 +298,29 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 EditorGUILayout.PropertyField(m_SupportsDynamicBatching, Styles.dynamicBatching);
                 EditorGUILayout.PropertyField(m_MixedLightingSupportedProp, Styles.mixedLightingSupportLabel);
                 EditorGUILayout.PropertyField(m_ShaderVariantLogLevel, Styles.shaderVariantLogLevel);
+                EditorGUI.indentLevel--;
+                EditorGUILayout.Space();
+                EditorGUILayout.Space();
+            }
+        }
+        void DrawLookingGlassSettings()
+        {
+            m_LookingGlassSettingsFoldout = EditorGUILayout.Foldout(m_LookingGlassSettingsFoldout, Styles.lookingSettingsText);
+
+            if(m_LookingGlassSettingsFoldout)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(m_lg_renderTargetW, Styles.lgTileWidth);
+                EditorGUILayout.PropertyField(m_lg_renderTargetH, Styles.lgTileHeight);
+
+                EditorGUILayout.PropertyField(m_lg_tileX, Styles.lgTileXNum);
+                EditorGUILayout.PropertyField(m_lg_tileY, Styles.lgTileYNum);
+
+                EditorGUILayout.PropertyField(m_lg_fov, Styles.lgFov);
+                EditorGUILayout.PropertyField(m_lg_size, Styles.lgSize);
+
+                EditorGUILayout.PropertyField(m_lg_nearClipFactor, Styles.lgNearClipFactor);
+                EditorGUILayout.PropertyField(m_lg_farClipFactor, Styles.lgFarClipFactor);
                 EditorGUI.indentLevel--;
                 EditorGUILayout.Space();
                 EditorGUILayout.Space();

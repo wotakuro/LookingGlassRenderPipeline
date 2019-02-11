@@ -68,6 +68,8 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         // Default values set when a new LightweightRenderPipeline asset is created
         [SerializeField] int k_AssetVersion = 4;
 
+
+
         // General settings
         [SerializeField] bool m_RequireDepthTexture = false;
         [SerializeField] bool m_RequireOpaqueTexture = false;
@@ -99,6 +101,18 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         // Advanced settings
         [SerializeField] bool m_SupportsDynamicBatching = true;
         [SerializeField] bool m_MixedLightingSupported = true;
+
+        // looking Glass settings
+        [SerializeField] int m_lg_renderTargetW = 4096;
+        [SerializeField] int m_lg_renderTargetH = 4096;
+        [SerializeField] int m_lg_tileX = 4;
+        [SerializeField] int m_lg_tileY = 9;
+        [SerializeField] float m_lg_fov = 13.5f;
+        [SerializeField] float m_lg_size = 2;
+        [SerializeField] float m_lg_nearClipFactor = 1.0f;
+        [SerializeField] float m_lg_farClipFactor = 1.5f;
+
+
         // TODO: Render Pipeline Batcher
 
         // Deprecated settings
@@ -110,6 +124,8 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
         [SerializeField] LookingGlassRenderPipelineResources m_ResourcesAsset = null;
         [SerializeField] ShaderVariantLogLevel m_ShaderVariantLogLevel = ShaderVariantLogLevel.Disabled;
+
+
 #if UNITY_EDITOR
         [NonSerialized]
         LookingGlassRenderPipelineEditorResources m_EditorResourcesAsset;
@@ -304,7 +320,23 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 return 1;
             }
         }
+        public LookingGlassInfo lookingGlassInfo
+        {
+            get
+            {
+                LookingGlassInfo info = new LookingGlassInfo();
 
+                info.renderTargetW = m_lg_renderTargetW;
+                info.renderTargetH = m_lg_renderTargetH;
+                info.tileX = m_lg_tileX;
+                info.tileY = m_lg_tileY;
+                info.fov = m_lg_fov;
+                info.size = m_lg_size;
+                info.nearClipFactor = m_lg_nearClipFactor;
+                info.farClipFactor = m_lg_farClipFactor;
+                return info;
+            }
+        }
 
 
         public float shadowDepthBias

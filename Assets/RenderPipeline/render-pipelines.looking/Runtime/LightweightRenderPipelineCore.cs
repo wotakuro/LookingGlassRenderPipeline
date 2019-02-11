@@ -48,6 +48,8 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
         public float maxShadowDistance;
         public bool postProcessEnabled;
+
+        public LookingGlassInfo lookingGlassInfo;
     }
 
     public struct ShadowData
