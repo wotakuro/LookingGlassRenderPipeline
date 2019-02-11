@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: f7b377b6f8318804e8dcc143d98b6e3c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_BlitShader: {fileID: 4800000, guid: e2166f89dc4ca054ab45668ba8d5aa50, type: 3}
+  - m_CopyDepthShader: {fileID: 4800000, guid: a2983d21727899b46bf1f9757f64871b, type: 3}
+  - m_ScreenSpaceShadowShader: {fileID: 4800000, guid: 17d65ddc08774194bb25c833fdd69ff1,
+      type: 3}
+  - m_SamplingShader: {fileID: 4800000, guid: 532c3b8bba14b9548ba655cb7f2c863a, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

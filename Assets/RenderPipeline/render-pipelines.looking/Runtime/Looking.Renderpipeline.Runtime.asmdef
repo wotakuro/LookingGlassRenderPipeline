@@ -1,0 +1,14 @@
+{
+    "name": "Unity.RenderPipelines.Lightweight.Runtime",
+    "references": [
+        "Unity.RenderPipelines.Core.Runtime"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}
