@@ -82,10 +82,14 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             commandBuffer.Clear();
 
             var tileSize = new Vector2(w, h);
-            for (int i = 0; i < drawInfo.tileX; ++i)
+            int counter = 0;
+            int tileNum = drawInfo.tileX * drawInfo.tileY;
+            for (int i = 0; i < drawInfo.tileY; ++i)
             {
-                for (int j = 0; j < drawInfo.tileY; ++j)
+                for (int j = 0; j < drawInfo.tileX; ++j)
                 {
+                    SetupVPMatrices(context, commandBuffer, camera, counter, tileNum);
+
                     commandBuffer.SetRenderTarget(tempRenderTexture);
                     commandBuffer.ClearRenderTarget(true, true, Color.black);
                     context.ExecuteCommandBuffer(commandBuffer);
@@ -101,11 +105,12 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                     context.DrawRenderers(renderingData.cullResults.visibleRenderers, ref transDrawSettings, m_TransparentFilterSettings);
 
                     commandBuffer.CopyTexture(tempRenderTexture, 0, 0, 0, 0, tempRenderTexture.width, tempRenderTexture.height,
-                        dstTiledTexture, 0, 0, i * w, j * h);
+                        dstTiledTexture, 0, 0, j * w, i * h);
 
                     context.ExecuteCommandBuffer(commandBuffer);
                     context.Submit();
                     commandBuffer.Clear();
+                    ++counter;
                 }
             }
 
@@ -120,9 +125,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
             camera.transform.position = new Vector3(0, 0, -adjustedDistance);
             camera.transform.localRotation = Quaternion.identity;
-//            camera.aspect = 
-
-            //            camera.nearClipPlane;
         }
 
         public static float GetAdjustedDistance(float fov,float size)
@@ -130,13 +132,45 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             return size / Mathf.Tan(fov * 0.5f * Mathf.Deg2Rad);
         }
 
-        private void Setup(ScriptableRenderContext context, CommandBuffer cmd,
+        private void SetupVPMatrices(ScriptableRenderContext context, CommandBuffer cmd,
             Camera camera,
             int view, int numViews)
         {
-            cmd.SetViewProjectionMatrices(Matrix4x4.identity, Matrix4x4.identity);
+            Matrix4x4 projMatrix = camera.projectionMatrix;
+            Matrix4x4 viewMatrix = camera.worldToCameraMatrix;
+
+            float adjustedDistance = GetAdjustedDistance(drawInfo.fov, drawInfo.size);
+
+            float verticalAngle = 0.0f;
+            float horizontalAngle = AngleAtView(view, numViews);
+
+            float offsetX = adjustedDistance * Mathf.Tan(horizontalAngle * Mathf.Deg2Rad);
+            float offsetY = adjustedDistance * Mathf.Tan(verticalAngle * Mathf.Deg2Rad);
+
+            // view matrix
+            viewMatrix.m03 -= offsetX;
+            viewMatrix.m13 -= offsetY;
+
+            // proj matrix
+            projMatrix.m02 -= offsetX / (drawInfo.size * camera.aspect);
+            projMatrix.m12 -= offsetY / drawInfo.size;
+
+
+            cmd.SetViewProjectionMatrices(viewMatrix, projMatrix);
+            context.ExecuteCommandBuffer(cmd);
             cmd.Clear();
         }
+
+        public static float AngleAtView(int view, int numViews, float viewCone = 40.0f)
+        {
+            viewCone = Mathf.Abs(viewCone);
+
+            if (numViews <= 1)
+                return 0;
+
+            return -viewCone * 0.5f + (float)view / (numViews - 1f) * viewCone;
+        }
+
 
         public void Dispose()
         {
