@@ -70,7 +70,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
             m_Initialized = true;
 
-            tileTexture = new RenderTexture(4096, 4096, 0);
         }
 
         public void Setup(ScriptableRenderer renderer, ref RenderingData renderingData)
@@ -124,8 +123,10 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             {
                 LookingGlassInfo info = renderingData.cameraData.lookingGlassInfo;
 
-
-
+                if (tileTexture == null || !tileTexture)
+                {
+                    tileTexture = new RenderTexture(info.renderTargetW, info.renderTargetH, 0);
+                }
 
                 m_LookingMultiTexturePass.Setup(tileTexture,ref info);
                 renderer.EnqueuePass(m_LookingMultiTexturePass);
