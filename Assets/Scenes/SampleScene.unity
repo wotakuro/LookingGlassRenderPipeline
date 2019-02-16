@@ -89,7 +89,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -192,6 +192,9 @@ GameObject:
   - component: {fileID: 309894575}
   - component: {fileID: 309894574}
   - component: {fileID: 309894573}
+  - component: {fileID: 309894576}
+  - component: {fileID: 309894577}
+  - component: {fileID: 309894578}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -242,11 +245,11 @@ Camera:
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
+  m_HDR: 0
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
+  m_OcclusionCulling: 0
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
 --- !u!4 &309894575
@@ -261,8 +264,63 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &309894576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309894572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9de801e135d0e842b77ac400df3a7f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 0
+  m_RequiresOpaqueTextureOption: 0
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+--- !u!114 &309894577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309894572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08b985b13be5c4048aae86e39d7dbd58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  config:
+    pitch: 47.60786
+    slope: -5.446739
+    center: 0.1345109
+    viewCone: 40
+    invView: 1
+    verticalAngle: 0
+    DPI: 338
+    screenW: 2560
+    screenH: 1600
+    flipImageX: 0
+    flipImageY: 0
+    flipSubp: 0
+--- !u!114 &309894578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309894572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9047452bd8c30004c93da1feddc237cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &325670651
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,253 +410,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &532460245
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1835017195477188, guid: 63c6926d7134aed4d8d05db7455063c5, type: 3}
-      propertyPath: m_Name
-      value: HoloPlay Capture
-      objectReference: {fileID: 0}
-    - target: {fileID: 1835017195477188, guid: 63c6926d7134aed4d8d05db7455063c5, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4418173991791834, guid: 63c6926d7134aed4d8d05db7455063c5, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4418173991791834, guid: 63c6926d7134aed4d8d05db7455063c5, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.71
-      objectReference: {fileID: 0}
-    - target: {fileID: 4418173991791834, guid: 63c6926d7134aed4d8d05db7455063c5, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4418173991791834, guid: 63c6926d7134aed4d8d05db7455063c5, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4418173991791834, guid: 63c6926d7134aed4d8d05db7455063c5, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4418173991791834, guid: 63c6926d7134aed4d8d05db7455063c5, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4418173991791834, guid: 63c6926d7134aed4d8d05db7455063c5, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4418173991791834, guid: 63c6926d7134aed4d8d05db7455063c5, type: 3}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4418173991791834, guid: 63c6926d7134aed4d8d05db7455063c5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4418173991791834, guid: 63c6926d7134aed4d8d05db7455063c5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4418173991791834, guid: 63c6926d7134aed4d8d05db7455063c5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114467394418190342, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114467394418190342, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: advancedFoldout
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114467394418190342, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: useCustomVerticalAngle
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114467394418190342, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: customVerticalAngle
-      value: -60
-      objectReference: {fileID: 0}
-    - target: {fileID: 114467394418190342, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: useCustomViewCone
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114467394418190342, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: customViewCone
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: lenticularMat
-      value: 
-      objectReference: {fileID: 2130165076}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: quiltRT
-      value: 
-      objectReference: {fileID: 1341444095}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: config.serial
-      value: 00000
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: config.pitch.value
-      value: 49.91
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: config.slope.value
-      value: 5.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: config.center.value
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: config.invView.value
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: advancedFoldout
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: tilingPresetIndex
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: tiling.presetName
-      value: High Res
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: tiling.tilesX
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: tiling.tilesY
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: tiling.quiltW
-      value: 4096
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: tiling.quiltH
-      value: 4096
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: tiling.numViews
-      value: 45
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: tiling.tileSizeX
-      value: 819
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: tiling.tileSizeY
-      value: 455
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: tiling.paddingX
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: tiling.paddingY
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: tiling.portionX
-      value: 0.99975586
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: tiling.portionY
-      value: 0.99975586
-      objectReference: {fileID: 0}
-    - target: {fileID: 114329103378511520, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: forceConfigResolution
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4153913709431786, guid: 63c6926d7134aed4d8d05db7455063c5, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -16.897915
-      objectReference: {fileID: 0}
-    - target: {fileID: 20680940115639380, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: near clip plane
-      value: 14.897915
-      objectReference: {fileID: 0}
-    - target: {fileID: 20680940115639380, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: far clip plane
-      value: 19.897915
-      objectReference: {fileID: 0}
-    - target: {fileID: 20680940115639380, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: orthographic size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 20680940115639380, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 20680940115639380, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0.31163225
-      objectReference: {fileID: 0}
-    - target: {fileID: 20680940115639380, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0.4408675
-      objectReference: {fileID: 0}
-    - target: {fileID: 20680940115639380, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0.4433962
-      objectReference: {fileID: 0}
-    - target: {fileID: 20997309363445380, guid: 63c6926d7134aed4d8d05db7455063c5,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 63c6926d7134aed4d8d05db7455063c5, type: 3}
 --- !u!1001 &850542174
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -745,62 +558,5 @@ Transform:
   m_LocalScale: {x: 5.0598, y: 1, z: 7.8542047}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!84 &1341444095
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_Width: 4096
-  m_Height: 4096
-  m_AntiAliasing: 1
-  m_DepthFormat: 0
-  m_ColorFormat: 7
-  m_MipMap: 0
-  m_GenerateMips: 0
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 0
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
---- !u!21 &2130165076
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: HoloPlay/Lenticular
-  m_Shader: {fileID: 4800000, guid: 429fb4e5e466f5d419aa7c8e90e61e45, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats: []
-    m_Colors: []

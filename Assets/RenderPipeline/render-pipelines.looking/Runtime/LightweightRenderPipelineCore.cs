@@ -49,7 +49,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         public float maxShadowDistance;
         public bool postProcessEnabled;
 
-        public LookingGlassInfo lookingGlassInfo;
+        public LookingGlassRenderingInfo lookingGlassInfo;
     }
 
     public struct ShadowData
@@ -83,7 +83,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         public static readonly string DepthMsaa4 = "_DEPTH_MSAA_4";
     }
 
-    public sealed partial class LightweightRenderPipeline
+    public sealed partial class LookingGlassRenderPipeline
     {
         static List<Vector4> m_ShadowBiasData = new List<Vector4>();
 

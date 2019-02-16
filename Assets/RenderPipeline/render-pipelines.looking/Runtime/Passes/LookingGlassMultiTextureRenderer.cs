@@ -6,7 +6,7 @@ using UnityEngine.Rendering;
 
 namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 {
-    public struct LookingGlassInfo
+    public struct LookingGlassRenderingInfo
     {
         public int renderTargetW;
         public int renderTargetH;
@@ -17,13 +17,27 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         public float size;
         public float nearClipFactor;
         public float farClipFactor;
+
+        public int tileSizeX;
+        public int tileSizeY;
+
+        public void CalculatePortion( out float portionX,out float portionY)
+        {
+            int tileSizeX = (int)renderTargetW / tileX;
+            int tileSizeY = (int)renderTargetH / tileY;
+            float paddingX = (int)renderTargetW - tileX * tileSizeX;
+            float paddingY = (int)renderTargetH - tileY * tileSizeY;
+            portionX = (float)tileX * tileSizeX / (float)renderTargetW;
+            portionY = (float)tileY * tileSizeY / (float)renderTargetH;
+        }
+
     }
 
 
     // DrawPass
     public class LookingGlassMultiTextureRenderer : ScriptableRenderPass
     {
-        private LookingGlassInfo drawInfo;
+        private LookingGlassRenderingInfo drawInfo;
         private CommandBuffer commandBuffer;
 
         private RendererConfiguration rendererConfiguration = RendererConfiguration.None;
@@ -33,7 +47,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
         private RenderTexture dstTiledTexture;
 
-        public void Setup(RenderTexture dst,ref LookingGlassInfo dinfo)
+        public void Setup(RenderTexture dst,ref LookingGlassRenderingInfo dinfo)
         {
             dstTiledTexture = dst;
             this.drawInfo = dinfo;

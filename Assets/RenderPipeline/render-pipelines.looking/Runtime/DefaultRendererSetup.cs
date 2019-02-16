@@ -117,11 +117,22 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
             m_SetupLightweightConstants.Setup(renderer.maxVisibleAdditionalLights, renderer.perObjectLightIndices);
             renderer.EnqueuePass(m_SetupLightweightConstants);
-
             // GameView at LGRP
             if (!renderingData.cameraData.isSceneViewCamera)
             {
-                LookingGlassInfo info = renderingData.cameraData.lookingGlassInfo;
+                LookingGlassRenderingInfo info = renderingData.cameraData.lookingGlassInfo;
+                LookingGlassDeviceConfig config;
+
+                var cameraDeviceInfo = camera.GetComponent<LookingGlassCameraInfo>();
+                if (cameraDeviceInfo != null)
+                {
+                    config = cameraDeviceInfo.config;
+                }
+                else
+                {
+                    config = new LookingGlassDeviceConfig();
+                    config.SetUpDefault();
+                }
 
                 if (tileTexture == null || !tileTexture)
                 {
@@ -131,7 +142,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 m_LookingMultiTexturePass.Setup(tileTexture,ref info);
                 renderer.EnqueuePass(m_LookingMultiTexturePass);
 
-                m_LookingFinalPass.SetUp(colorHandle, tileTexture, ref info);
+                m_LookingFinalPass.SetUp(colorHandle, tileTexture, ref info,ref config);
                 renderer.EnqueuePass(m_LookingFinalPass);
             }
             // SceneView

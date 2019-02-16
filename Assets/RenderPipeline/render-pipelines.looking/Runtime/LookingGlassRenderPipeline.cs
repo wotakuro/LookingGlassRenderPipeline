@@ -13,10 +13,10 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 {
     public interface IBeforeCameraRender
     {
-        void ExecuteBeforeCameraRender(LightweightRenderPipeline pipelineInstance, ScriptableRenderContext context, Camera camera);
+        void ExecuteBeforeCameraRender(LookingGlassRenderPipeline pipelineInstance, ScriptableRenderContext context, Camera camera);
     }
 
-    public sealed partial class LightweightRenderPipeline : RenderPipeline
+    public sealed partial class LookingGlassRenderPipeline : RenderPipeline
     {
         static class PerFrameBuffer
         {
@@ -76,7 +76,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             public bool supportsDynamicBatching { get; private set; }
             public bool mixedLightingSupported { get; private set; }
 
-            public LookingGlassInfo lookingGlassInfo { get; private set; }
+            public LookingGlassRenderingInfo lookingGlassInfo { get; private set; }
 
             public static PipelineSettings Create(LookingGlassRenderPipelineAsset asset)
             {
@@ -123,7 +123,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             }
         }
 
-        public LightweightRenderPipeline(LookingGlassRenderPipelineAsset asset)
+        public LookingGlassRenderPipeline(LookingGlassRenderPipelineAsset asset)
         {
             settings = PipelineSettings.Create(asset);
             renderer = new ScriptableRenderer(asset);
@@ -172,12 +172,11 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             foreach (Camera camera in cameras)
             {
                 BeginCameraRendering(camera);
-
-                RenderSingleCamera(this, renderContext, camera, ref m_CullResults, camera.GetComponent<IRendererSetup>());
+                RenderSingleCamera(this, renderContext, camera, ref m_CullResults );
             }
         }
 
-        public void RenderSingleCamera(LightweightRenderPipeline pipelineInstance, ScriptableRenderContext context, Camera camera, ref CullResults cullResults, IRendererSetup setup = null)
+        public void RenderSingleCamera(LookingGlassRenderPipeline pipelineInstance, ScriptableRenderContext context, Camera camera, ref CullResults cullResults)
         {
             if (pipelineInstance == null)
             {
@@ -213,9 +212,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 InitializeRenderingData(settings, ref cameraData, ref cullResults,
                     renderer.maxVisibleAdditionalLights, renderer.maxPerObjectAdditionalLights, out renderingData);
 
-                var setupToUse = setup;
-                if (setupToUse == null)
-                    setupToUse = defaultRendererSetup;
+                var setupToUse = defaultRendererSetup;
 
                 renderer.Clear();
                 setupToUse.Setup(renderer, ref renderingData);
@@ -362,9 +359,10 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             for (int i = 0; i < visibleLights.Count; ++i)
             {
                 Light light = visibleLights[i].light;
-                LWRPAdditionalLightData data =
-                    (light != null) ? light.gameObject.GetComponent<LWRPAdditionalLightData>() : null;
-
+                LWRPAdditionalLightData data = null;
+#if USE_LWRPAdditionalLightData
+                data = (light != null) ? light.gameObject.GetComponent<LWRPAdditionalLightData>() : null;
+#endif
                 if (data && !data.usePipelineSettings)
                     m_ShadowBiasData.Add(new Vector4(light.shadowBias, light.shadowNormalBias, 0.0f, 0.0f));
                 else

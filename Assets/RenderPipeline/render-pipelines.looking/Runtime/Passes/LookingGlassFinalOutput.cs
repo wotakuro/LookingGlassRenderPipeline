@@ -5,48 +5,67 @@ using UnityEngine.Rendering;
 
 namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 {
+
     public class LookingGlassFinalOutput : ScriptableRenderPass
     {
         const string k_FinalBlitTag = "Final Blit Pass";
 
         private RenderTexture tiledTexture;
-        private LookingGlassInfo drawInfo;
-        Material lenticularMat;
+        private LookingGlassRenderingInfo drawInfo;
+        private Material lenticularMat;
         private RenderTargetHandle colorAttachmentHandle { get; set; }
+        private LookingGlassDeviceConfig deviceConfig;
 
-        public void SetUp(RenderTargetHandle colorHandle,RenderTexture texture , ref LookingGlassInfo dinfo)
+        public void SetUp(RenderTargetHandle colorHandle,RenderTexture texture , 
+            ref LookingGlassRenderingInfo dinfo,ref LookingGlassDeviceConfig dconfig)
         {
             this.colorAttachmentHandle = colorHandle;
             tiledTexture = texture;
             drawInfo = dinfo;
+            deviceConfig = dconfig;
         }
         public void PassConfigToMaterial()
         {
-            lenticularMat.SetFloat("pitch", 372.5203f);
+            float screenInches = (float)deviceConfig.screenW / deviceConfig.DPI;
+            float newPitch = deviceConfig.pitch * screenInches;
+            newPitch *= Mathf.Cos(Mathf.Atan(1f / deviceConfig.slope));
+            lenticularMat.SetFloat("pitch", newPitch);
 
-            lenticularMat.SetFloat("tilt", -0.1147476f);
+            float newTilt = deviceConfig.screenH / (deviceConfig.screenW * deviceConfig.slope);
+            newTilt *= LookingGlassDeviceConfig.AsBool(deviceConfig.flipImageX) ? -1 : 1;
+            lenticularMat.SetFloat("tilt", newTilt);
 
-            lenticularMat.SetFloat("center", 0.1345109f);
-            lenticularMat.SetFloat("invView", 1);
-            lenticularMat.SetFloat("flipX", 0);
-            lenticularMat.SetFloat("flipY", 0);
+            float newCenter = deviceConfig.center;
+            newCenter += LookingGlassDeviceConfig.AsBool(deviceConfig.flipImageX) ? 0.5f : 0;
+            lenticularMat.SetFloat("center", newCenter);
+            lenticularMat.SetFloat("invView", deviceConfig.invView);
+            lenticularMat.SetFloat("flipX", deviceConfig.flipImageX);
+            lenticularMat.SetFloat("flipY", deviceConfig.flipImageY);
 
-            float subp = 0.0001302083f;// 1f / (config.screenW * 3f);
-//            subp *= config.flipImageX.asBool ? -1 : 1;
+            float subp = 1f / (deviceConfig.screenW * 3f);
+            subp *= LookingGlassDeviceConfig.AsBool(deviceConfig.flipImageX) ? -1 : 1;
             lenticularMat.SetFloat("subp", subp);
 
-            lenticularMat.SetInt("ri", 0);
-            lenticularMat.SetInt("bi", 2);
+            lenticularMat.SetInt("ri", !LookingGlassDeviceConfig.AsBool(deviceConfig.flipSubp) ? 0 : 2);
+            lenticularMat.SetInt("bi", !LookingGlassDeviceConfig.AsBool(deviceConfig.flipSubp) ? 2 : 0);
+
+            float portionX = 1.0f;
+            float portionY = 1.0f;
+
+            drawInfo.CalculatePortion(out portionX, out portionY);
 
             lenticularMat.SetVector("tile", new Vector4(
                 drawInfo.tileX,
                 drawInfo.tileY,
-                0.9997559f,
-                0.9997559f
+                portionX,
+                portionY
             ));
-
+            bool overscan = false;
             lenticularMat.SetVector("aspect", new Vector4(
-                1.6f,1.6f,0.0f,0.0f));
+                deviceConfig.screenW / deviceConfig.screenH,
+                deviceConfig.screenW / deviceConfig.screenH,
+                overscan ? 1 : 0
+            ));
         }
 
 

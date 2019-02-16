@@ -108,7 +108,7 @@ namespace UnityEditor.Experimental.Rendering.LightweightPipeline
             {
                 var materialTags = ShaderGenerator.BuildMaterialTags(pbrMasterNode.surfaceType);
                 var tagsBuilder = new ShaderStringBuilder(0);
-                materialTags.GetTags(tagsBuilder, LightweightRenderPipeline.k_ShaderTagName);
+                materialTags.GetTags(tagsBuilder, LookingGlassRenderPipeline.k_ShaderTagName);
                 subShader.AppendLines(tagsBuilder.ToString());
 
                 var materialOptions = ShaderGenerator.GetMaterialOptions(pbrMasterNode.surfaceType, pbrMasterNode.alphaMode, pbrMasterNode.twoSided.isOn);

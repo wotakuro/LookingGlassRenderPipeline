@@ -212,7 +212,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
         protected override IRenderPipeline InternalCreatePipeline()
         {
-            return new LightweightRenderPipeline(this);
+            return new LookingGlassRenderPipeline(this);
         }
 
         Material GetMaterial(DefaultMaterialType materialType)
@@ -320,11 +320,11 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 return 1;
             }
         }
-        public LookingGlassInfo lookingGlassInfo
+        public LookingGlassRenderingInfo lookingGlassInfo
         {
             get
             {
-                LookingGlassInfo info = new LookingGlassInfo();
+                LookingGlassRenderingInfo info = new LookingGlassRenderingInfo();
 
                 info.renderTargetW = m_lg_renderTargetW;
                 info.renderTargetH = m_lg_renderTargetH;
