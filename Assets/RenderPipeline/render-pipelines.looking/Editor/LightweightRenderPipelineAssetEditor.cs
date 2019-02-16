@@ -55,10 +55,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             public static GUIContent lgTileHeight = EditorGUIUtility.TrTextContent("tileHeight");
             public static GUIContent lgTileXNum = EditorGUIUtility.TrTextContent("tileXNum");
             public static GUIContent lgTileYNum = EditorGUIUtility.TrTextContent("tileYNum");
-            public static GUIContent lgFov = EditorGUIUtility.TrTextContent("Fov");
-            public static GUIContent lgSize = EditorGUIUtility.TrTextContent("Size");
-            public static GUIContent lgNearClipFactor = EditorGUIUtility.TrTextContent("NearClipFactor");
-            public static GUIContent lgFarClipFactor = EditorGUIUtility.TrTextContent("FarClipFactor");
 
 
             // Dropdown menu options
@@ -174,10 +170,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             m_lg_renderTargetH = serializedObject.FindProperty("m_lg_renderTargetH"); 
             m_lg_tileX = serializedObject.FindProperty("m_lg_tileX"); 
             m_lg_tileY = serializedObject.FindProperty("m_lg_tileY"); 
-            m_lg_fov = serializedObject.FindProperty("m_lg_fov"); 
-            m_lg_size = serializedObject.FindProperty("m_lg_size"); 
-            m_lg_nearClipFactor = serializedObject.FindProperty("m_lg_nearClipFactor"); 
-            m_lg_farClipFactor = serializedObject.FindProperty("m_lg_farClipFactor"); 
         }
 
         void DrawGeneralSettings()
@@ -315,12 +307,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
                 EditorGUILayout.PropertyField(m_lg_tileX, Styles.lgTileXNum);
                 EditorGUILayout.PropertyField(m_lg_tileY, Styles.lgTileYNum);
-
-                EditorGUILayout.PropertyField(m_lg_fov, Styles.lgFov);
-                EditorGUILayout.PropertyField(m_lg_size, Styles.lgSize);
-
-                EditorGUILayout.PropertyField(m_lg_nearClipFactor, Styles.lgNearClipFactor);
-                EditorGUILayout.PropertyField(m_lg_farClipFactor, Styles.lgFarClipFactor);
                 EditorGUI.indentLevel--;
                 EditorGUILayout.Space();
                 EditorGUILayout.Space();

@@ -232,8 +232,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 14.897915
-  far clip plane: 19.897915
+  near clip plane: 0
+  far clip plane: 0
   field of view: 13.5
   orthographic: 0
   orthographic size: 5
@@ -260,7 +260,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 309894572}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -16.897915}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -309,6 +309,11 @@ MonoBehaviour:
     flipImageX: 0
     flipImageY: 0
     flipSubp: 0
+  renderInfo:
+    fov: 13.5
+    size: 1.3
+    nearClipFactor: 1
+    farClipFactor: 1.5
 --- !u!114 &309894578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -339,7 +344,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &325670652
 BoxCollider:
   m_ObjectHideFlags: 0

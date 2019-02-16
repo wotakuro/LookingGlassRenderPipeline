@@ -9,10 +9,27 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
     public class LookingGlassCameraInfo : MonoBehaviour
     {
         public LookingGlassDeviceConfig config;
+        public LookingGlassRenderInfoPerCamera renderInfo;
 
         private void Awake()
         {
             config.SetUpDefault();
+        }
+    }
+    [System.Serializable]
+    public struct LookingGlassRenderInfoPerCamera
+    {
+        public float fov;
+        public float size;
+        public float nearClipFactor;
+        public float farClipFactor;
+
+        public void SetupDefault()
+        {
+            fov = 13.5f;
+            size = 1.0f;
+            nearClipFactor = 1.0f;
+            farClipFactor = 1.0f;
         }
     }
 

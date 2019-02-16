@@ -107,10 +107,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         [SerializeField] int m_lg_renderTargetH = 4096;
         [SerializeField] int m_lg_tileX = 4;
         [SerializeField] int m_lg_tileY = 9;
-        [SerializeField] float m_lg_fov = 13.5f;
-        [SerializeField] float m_lg_size = 2;
-        [SerializeField] float m_lg_nearClipFactor = 1.0f;
-        [SerializeField] float m_lg_farClipFactor = 1.5f;
 
 
         // TODO: Render Pipeline Batcher
@@ -330,10 +326,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 info.renderTargetH = m_lg_renderTargetH;
                 info.tileX = m_lg_tileX;
                 info.tileY = m_lg_tileY;
-                info.fov = m_lg_fov;
-                info.size = m_lg_size;
-                info.nearClipFactor = m_lg_nearClipFactor;
-                info.farClipFactor = m_lg_farClipFactor;
                 return info;
             }
         }

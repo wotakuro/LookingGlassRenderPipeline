@@ -12,11 +12,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         public int renderTargetH;
         public int tileX;
         public int tileY;
-
-        public float fov;
-        public float size;
-        public float nearClipFactor;
-        public float farClipFactor;
+        
 
         public int tileSizeX;
         public int tileSizeY;
@@ -38,6 +34,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
     public class LookingGlassMultiTextureRenderer : ScriptableRenderPass
     {
         private LookingGlassRenderingInfo drawInfo;
+        private LookingGlassRenderInfoPerCamera perCameraInfo;
         private CommandBuffer commandBuffer;
 
         private RendererConfiguration rendererConfiguration = RendererConfiguration.None;
@@ -47,10 +44,12 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
         private RenderTexture dstTiledTexture;
 
-        public void Setup(RenderTexture dst,ref LookingGlassRenderingInfo dinfo)
+        public void Setup(RenderTexture dst,ref LookingGlassRenderingInfo dinfo,
+            ref LookingGlassRenderInfoPerCamera perCamInfo)
         {
             dstTiledTexture = dst;
             this.drawInfo = dinfo;
+            this.perCameraInfo = perCamInfo;
         }
 
         public LookingGlassMultiTextureRenderer()
@@ -132,10 +131,10 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         }
         private void SetupCameraInfo(Camera camera)
         {
-            camera.fieldOfView = drawInfo.fov;
-            float adjustedDistance = GetAdjustedDistance(drawInfo.fov, drawInfo.size);
-            camera.nearClipPlane = adjustedDistance - drawInfo.nearClipFactor * drawInfo.size;
-            camera.farClipPlane = adjustedDistance + drawInfo.farClipFactor * drawInfo.size;
+            camera.fieldOfView = perCameraInfo.fov;
+            float adjustedDistance = GetAdjustedDistance(perCameraInfo.fov, perCameraInfo.size);
+            camera.nearClipPlane = adjustedDistance - perCameraInfo.nearClipFactor * perCameraInfo.size;
+            camera.farClipPlane = adjustedDistance + perCameraInfo.farClipFactor * perCameraInfo.size;
 
             camera.transform.position = new Vector3(0, 0, -adjustedDistance);
             camera.transform.localRotation = Quaternion.identity;
@@ -153,7 +152,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             Matrix4x4 projMatrix = camera.projectionMatrix;
             Matrix4x4 viewMatrix = camera.worldToCameraMatrix;
 
-            float adjustedDistance = GetAdjustedDistance(drawInfo.fov, drawInfo.size);
+            float adjustedDistance = GetAdjustedDistance(perCameraInfo.fov, perCameraInfo.size);
 
             float verticalAngle = 0.0f;
             float horizontalAngle = AngleAtView(view, numViews);
@@ -166,8 +165,8 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             viewMatrix.m13 -= offsetY;
 
             // proj matrix
-            projMatrix.m02 -= offsetX / (drawInfo.size * camera.aspect);
-            projMatrix.m12 -= offsetY / drawInfo.size;
+            projMatrix.m02 -= offsetX / (perCameraInfo.size * camera.aspect);
+            projMatrix.m12 -= offsetY / perCameraInfo.size;
 
 
             cmd.SetViewProjectionMatrices(viewMatrix, projMatrix);

@@ -122,16 +122,20 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             {
                 LookingGlassRenderingInfo info = renderingData.cameraData.lookingGlassInfo;
                 LookingGlassDeviceConfig config;
+                LookingGlassRenderInfoPerCamera perCameraInfo;
 
                 var cameraDeviceInfo = camera.GetComponent<LookingGlassCameraInfo>();
                 if (cameraDeviceInfo != null)
                 {
                     config = cameraDeviceInfo.config;
+                    perCameraInfo = cameraDeviceInfo.renderInfo;
                 }
                 else
                 {
                     config = new LookingGlassDeviceConfig();
                     config.SetUpDefault();
+                    perCameraInfo = new LookingGlassRenderInfoPerCamera();
+                    perCameraInfo.SetupDefault();
                 }
 
                 if (tileTexture == null || !tileTexture)
@@ -139,7 +143,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                     tileTexture = new RenderTexture(info.renderTargetW, info.renderTargetH, 0);
                 }
 
-                m_LookingMultiTexturePass.Setup(tileTexture,ref info);
+                m_LookingMultiTexturePass.Setup(tileTexture,ref info,ref perCameraInfo);
                 renderer.EnqueuePass(m_LookingMultiTexturePass);
 
                 m_LookingFinalPass.SetUp(colorHandle, tileTexture, ref info,ref config);
