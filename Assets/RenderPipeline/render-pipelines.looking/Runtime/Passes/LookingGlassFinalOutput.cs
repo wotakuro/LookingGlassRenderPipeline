@@ -24,14 +24,14 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         {
             lenticularMat.SetFloat("pitch", 372.5203f);
 
-            lenticularMat.SetFloat("tilt", 0.11f);
+            lenticularMat.SetFloat("tilt", -0.1147476f);
 
-            lenticularMat.SetFloat("center", 0);
-            lenticularMat.SetFloat("invView", 0);
+            lenticularMat.SetFloat("center", 0.1345109f);
+            lenticularMat.SetFloat("invView", 1);
             lenticularMat.SetFloat("flipX", 0);
             lenticularMat.SetFloat("flipY", 0);
 
-            float subp = 0.00013f;// 1f / (config.screenW * 3f);
+            float subp = 0.0001302083f;// 1f / (config.screenW * 3f);
 //            subp *= config.flipImageX.asBool ? -1 : 1;
             lenticularMat.SetFloat("subp", subp);
 
@@ -41,8 +41,8 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             lenticularMat.SetVector("tile", new Vector4(
                 drawInfo.tileX,
                 drawInfo.tileY,
-                1,
-                1
+                0.9997559f,
+                0.9997559f
             ));
 
             lenticularMat.SetVector("aspect", new Vector4(
@@ -57,7 +57,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 lenticularMat = new Material(Shader.Find("HoloPlay/Lenticular"));
             }
             PassConfigToMaterial();
-
             lenticularMat.mainTexture = tiledTexture;
             CommandBuffer cmd = CommandBufferPool.Get(k_FinalBlitTag);
 
