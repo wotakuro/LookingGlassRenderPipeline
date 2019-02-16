@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/AssetStoreTools/BombBuilding.unity
-    guid: e47b86691eef3c04fa907be6f72747b4
-  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 2351aa0443377b04e8fc44d644b031a0
   m_configObjects: {}
