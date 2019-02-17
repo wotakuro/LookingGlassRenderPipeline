@@ -154,6 +154,12 @@ Varyings LitPassVertex(Attributes input)
 // Used in Standard (Physically Based) shader
 half4 LitPassFragment(Varyings input) : SV_Target
 {
+#if LG_SINGLEPASS_INSTANCING
+    UNITY_SETUP_INSTANCE_ID(input);
+    float4 lg_screenRect = UNITY_ACCESS_INSTANCED_PROP(PerDrawLooking,LookingScreenRect);
+#endif
+
+
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
     SurfaceData surfaceData;
