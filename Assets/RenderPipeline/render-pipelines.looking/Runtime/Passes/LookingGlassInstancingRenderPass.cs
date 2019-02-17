@@ -14,6 +14,8 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         private LookingGlassRenderingInfo drawInfo;
         private LookingGlassRenderInfoPerCamera perCameraInfo;
         private CommandBuffer commandBuffer;
+        const string LgInstancingShaderKeyword = "LG_SINGLEPASS_INSTANCING";
+
 
         private RendererConfiguration rendererConfiguration = RendererConfiguration.None;
 
@@ -75,7 +77,8 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             materialPropertyBlock.SetVectorArray("LookingVPOffset", m_VpOffsetParam);
             materialPropertyBlock.SetVectorArray("LookingScreenRect", m_ScreenRectParam);
 
-            Shader.EnableKeyword("LG_SINGLEPASS_INSTANCING");
+
+            Shader.EnableKeyword(LgInstancingShaderKeyword);
             // todo メッシュ一覧取得周りの仕組みつくる
 
             var meshFilters = Resources.FindObjectsOfTypeAll<MeshFilter>();
@@ -103,7 +106,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             context.Submit();
             commandBuffer.Clear();
 
-            Shader.DisableKeyword("LG_SINGLEPASS_INSTANCING");
+            Shader.DisableKeyword(LgInstancingShaderKeyword);
         }
 
         private void SetupCameraInfo(Camera camera)
