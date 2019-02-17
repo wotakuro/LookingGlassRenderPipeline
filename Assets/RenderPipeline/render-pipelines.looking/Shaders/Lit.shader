@@ -42,6 +42,7 @@ Shader "Lightweight Render Pipeline/Lit"
         [HideInInspector] _Cull("__cull", Float) = 2.0
 
         _ReceiveShadows("Receive Shadows", Float) = 1.0
+				
     }
 
     SubShader
@@ -95,6 +96,9 @@ Shader "Lightweight Render Pipeline/Lit"
             #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile _ _SHADOWS_SOFT
             #pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
+
+			// Looking Glass KeyWord
+            #pragma multi_compile _ LG_SINGLEPASS_INSTANCING
 
             // -------------------------------------
             // Unity defined keywords

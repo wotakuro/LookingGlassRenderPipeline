@@ -3,6 +3,16 @@
 
 #include "Assets/RenderPipeline/render-pipelines.looking/ShaderLibrary/Lighting.hlsl"
 
+// for looking glass
+#if LG_SINGLEPASS_INSTANCING
+	UNITY_INSTANCING_BUFFER_START(PerDrawLooking)
+		UNITY_DEFINE_INSTANCED_PROP(float4, LookingVPOffset)
+		UNITY_DEFINE_INSTANCED_PROP(float4, LookingScreenRect)
+	UNITY_INSTANCING_BUFFER_END(PerDrawLooking)
+#endif
+//===================
+
+
 struct Attributes
 {
     float4 positionOS   : POSITION;
@@ -86,6 +96,8 @@ Varyings LitPassVertex(Attributes input)
     Varyings output = (Varyings)0;
 
     UNITY_SETUP_INSTANCE_ID(input);
+
+
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
     VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
@@ -124,6 +136,17 @@ Varyings LitPassVertex(Attributes input)
 #endif
 
     output.positionCS = vertexInput.positionCS;
+
+#if LG_SINGLEPASS_INSTANCING
+
+	// Looking Glass Add
+	float4 lg_vpOffset = UNITY_ACCESS_INSTANCED_PROP(PerDrawLooking,LookingVPOffset);
+	float4 lg_screenRect = UNITY_ACCESS_INSTANCED_PROP(PerDrawLooking,LookingScreenRect);
+
+	output.positionCS.x = output.positionCS.x * lg_screenRect.z + lg_screenRect.x * output.positionCS.w;
+	output.positionCS.y = output.positionCS.y * lg_screenRect.w + lg_screenRect.y * output.positionCS.w;
+	// ============================
+#endif
 
     return output;
 }

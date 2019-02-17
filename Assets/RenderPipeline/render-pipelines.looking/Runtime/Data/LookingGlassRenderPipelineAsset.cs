@@ -107,6 +107,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         [SerializeField] int m_lg_renderTargetH = 4096;
         [SerializeField] int m_lg_tileX = 4;
         [SerializeField] int m_lg_tileY = 9;
+        [SerializeField] LookingGlassRenderingInfo.RenderingMethod m_lg_renderMethod;
 
 
         // TODO: Render Pipeline Batcher
@@ -326,6 +327,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 info.renderTargetH = m_lg_renderTargetH;
                 info.tileX = m_lg_tileX;
                 info.tileY = m_lg_tileY;
+                info.renderMethod = m_lg_renderMethod;
                 return info;
             }
         }

@@ -18,6 +18,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         private FinalBlitPass m_FinalBlitPass;
 
         private LookingGlassMultiTextureRenderer m_LookingMultiTexturePass;
+        private LookingGlassInstancingRenderPass m_LookingInstancingRenderPass;
         private LookingGlassFinalOutput m_LookingFinalPass;
 
 #if UNITY_EDITOR
@@ -54,6 +55,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             m_FinalBlitPass = new FinalBlitPass();
 
             m_LookingMultiTexturePass = new LookingGlassMultiTextureRenderer();
+            m_LookingInstancingRenderPass = new LookingGlassInstancingRenderPass();
             m_LookingFinalPass = new LookingGlassFinalOutput();
 
 #if UNITY_EDITOR
@@ -143,8 +145,18 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                     tileTexture = new RenderTexture(info.renderTargetW, info.renderTargetH, 0);
                 }
 
-                m_LookingMultiTexturePass.Setup(tileTexture,ref info,ref perCameraInfo);
-                renderer.EnqueuePass(m_LookingMultiTexturePass);
+                // tile texture draw( changed by method)
+                switch (info.renderMethod)
+                {
+                    case LookingGlassRenderingInfo.RenderingMethod.RenderNormal:
+                        m_LookingMultiTexturePass.Setup(tileTexture, ref info, ref perCameraInfo);
+                        renderer.EnqueuePass(m_LookingMultiTexturePass);
+                        break;
+                    case LookingGlassRenderingInfo.RenderingMethod.RenderInstancing:
+                        m_LookingInstancingRenderPass.Setup(tileTexture, ref info, ref perCameraInfo);
+                        renderer.EnqueuePass(m_LookingInstancingRenderPass);
+                        break;
+                }
 
                 m_LookingFinalPass.SetUp(colorHandle, tileTexture, ref info,ref config);
                 renderer.EnqueuePass(m_LookingFinalPass);

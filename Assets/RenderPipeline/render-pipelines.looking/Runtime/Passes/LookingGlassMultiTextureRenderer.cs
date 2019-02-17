@@ -8,11 +8,19 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 {
     public struct LookingGlassRenderingInfo
     {
+        public enum RenderingMethod:int
+        {
+            RenderNormal = 0,
+            RenderInstancing = 1
+        }
+
         public int renderTargetW;
         public int renderTargetH;
         public int tileX;
         public int tileY;
-        
+        public RenderingMethod renderMethod;
+
+
 
         public int tileSizeX;
         public int tileSizeY;
@@ -89,6 +97,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             var transDrawSettings = CreateDrawRendererSettings(camera, SortFlags.CommonTransparent, rendererConfiguration, renderingData.supportsDynamicBatching);
 
             // clear Tile Texture
+            commandBuffer.SetRenderTarget(dstTiledTexture);
             commandBuffer.ClearRenderTarget(true, true, Color.black);
             context.ExecuteCommandBuffer(commandBuffer);
             context.Submit();
