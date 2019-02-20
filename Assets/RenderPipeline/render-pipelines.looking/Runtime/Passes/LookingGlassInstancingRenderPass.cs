@@ -19,9 +19,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
         private RendererConfiguration rendererConfiguration = RendererConfiguration.None;
 
-        FilterRenderersSettings m_OpaqueFilterSettings;
-        FilterRenderersSettings m_TransparentFilterSettings;
-
         private RenderTexture dstTiledTexture;
 
         private Vector4[] m_VpOffsetParam;
@@ -45,15 +42,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
 
             commandBuffer = new CommandBuffer();
-
-            m_OpaqueFilterSettings = new FilterRenderersSettings(true)
-            {
-                renderQueueRange = RenderQueueRange.opaque,
-            };
-            m_TransparentFilterSettings = new FilterRenderersSettings(true)
-            {
-                renderQueueRange = RenderQueueRange.transparent,
-            };
         }
 
 

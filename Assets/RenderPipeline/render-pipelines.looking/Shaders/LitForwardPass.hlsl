@@ -97,6 +97,17 @@ Varyings LitPassVertex(Attributes input)
 
     UNITY_SETUP_INSTANCE_ID(input);
 
+#if LG_SINGLEPASS_INSTANCING
+	float4 lg_vpOffset = UNITY_ACCESS_INSTANCED_PROP(PerDrawLooking,LookingVPOffset);
+	unity_MatrixV[0][3] -= lg_vpOffset.x;
+	unity_MatrixV[1][3] -= lg_vpOffset.y;
+	float4x4 unity_MatrixP = UNITY_MATRIX_P;
+	unity_MatrixP[0][2] -= lg_vpOffset.z;
+	unity_MatrixP[1][2] -= lg_vpOffset.w;
+	unity_MatrixVP = mul( unity_MatrixP , unity_MatrixV );
+#endif
+
+
 
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
@@ -140,7 +151,6 @@ Varyings LitPassVertex(Attributes input)
 #if LG_SINGLEPASS_INSTANCING
 
 	// Looking Glass Add
-	float4 lg_vpOffset = UNITY_ACCESS_INSTANCED_PROP(PerDrawLooking,LookingVPOffset);
 	float4 lg_screenRect = UNITY_ACCESS_INSTANCED_PROP(PerDrawLooking,LookingScreenRect);
 
 	output.positionCS.x = output.positionCS.x * lg_screenRect.z + lg_screenRect.x * output.positionCS.w;
@@ -157,6 +167,10 @@ half4 LitPassFragment(Varyings input) : SV_Target
 #if LG_SINGLEPASS_INSTANCING
     UNITY_SETUP_INSTANCE_ID(input);
     float4 lg_screenRect = UNITY_ACCESS_INSTANCED_PROP(PerDrawLooking,LookingScreenRect);
+	
+	unity_MatrixV[0][3] = unity_MatrixV[0][3] - lg_screenRect.x;
+	unity_MatrixV[1][3] = unity_MatrixV[1][3] - lg_screenRect.y;
+
 #endif
 
 
