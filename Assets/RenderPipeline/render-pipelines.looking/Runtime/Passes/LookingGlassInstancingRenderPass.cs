@@ -143,18 +143,18 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 m_ScreenRectParam = new Vector4[tileNum];
             }
 
-            float width = 2.0f / (float)drawInfo.tileX;
-            float height = 2.0f / (float)drawInfo.tileY;
+            float width = 1.0f / (float)drawInfo.tileX;
+            float height = 1.0f / (float)drawInfo.tileY;
             for (int i = 0; i < drawInfo.tileY; ++i)
             {
                 for (int j = 0; j < drawInfo.tileX; ++j)
                 {
                     m_VpOffsetParam[counter] = GetVPMatrixOffsets(aspect , counter, tileNum);
 
-                    m_ScreenRectParam[counter] = new Vector4(
-                        (j / (float)drawInfo.tileX) * 2.0f - 1.0f  + width *0.5f,
-                        (i / (float)drawInfo.tileY) * 2.0f -1.0f + height * 0.5f,
-                        width,height );
+                    m_ScreenRectParam[tileNum - counter -1] = new Vector4(
+                        (j / (float)drawInfo.tileX) * 2.0f - 1.0f  + width ,
+                        (i / (float)drawInfo.tileY) * 2.0f -1.0f + height ,
+                        width  ,height  );
                     ++counter;
                 }
             }

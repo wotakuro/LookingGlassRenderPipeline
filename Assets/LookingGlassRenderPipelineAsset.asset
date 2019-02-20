@@ -34,8 +34,8 @@ MonoBehaviour:
   m_MixedLightingSupported: 0
   m_lg_renderTargetW: 4096
   m_lg_renderTargetH: 4096
-  m_lg_tileX: 4
-  m_lg_tileY: 8
+  m_lg_tileX: 1
+  m_lg_tileY: 2
   m_lg_renderMethod: 1
   m_ShadowType: 1
   m_LocalShadowsSupported: 0

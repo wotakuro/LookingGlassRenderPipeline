@@ -153,9 +153,23 @@ Varyings LitPassVertex(Attributes input)
 	// Looking Glass Add
 	float4 lg_screenRect = UNITY_ACCESS_INSTANCED_PROP(PerDrawLooking,LookingScreenRect);
 
-	output.positionCS.x = output.positionCS.x * lg_screenRect.z + lg_screenRect.x * output.positionCS.w;
-	output.positionCS.y = output.positionCS.y * lg_screenRect.w + lg_screenRect.y * output.positionCS.w;
+	float centerX = lg_screenRect.x * output.positionCS.w;
+	float centerY = lg_screenRect.y * output.positionCS.w;
+
+	output.positionCS.x = output.positionCS.x * lg_screenRect.z + centerX;
+	output.positionCS.y = output.positionCS.y * lg_screenRect.w + centerY;
+	
+	float tileWParam = lg_screenRect.z * output.positionCS.w;
+	float tileHParam = lg_screenRect.w * output.positionCS.w;
+
+	output.positionCS.x  = clamp( output.positionCS.x  , 
+		centerX - tileWParam * 1.5,
+		centerX + tileWParam * 1.5);
+	output.positionCS.y  = clamp( output.positionCS.y  , 
+		centerY - tileHParam * 1.5,
+		centerY + tileHParam * 1.5);
 	// ============================
+	UNITY_TRANSFER_INSTANCE_ID(input,output);
 #endif
 
     return output;
@@ -167,9 +181,17 @@ half4 LitPassFragment(Varyings input) : SV_Target
 #if LG_SINGLEPASS_INSTANCING
     UNITY_SETUP_INSTANCE_ID(input);
     float4 lg_screenRect = UNITY_ACCESS_INSTANCED_PROP(PerDrawLooking,LookingScreenRect);
-	
-	unity_MatrixV[0][3] = unity_MatrixV[0][3] - lg_screenRect.x;
-	unity_MatrixV[1][3] = unity_MatrixV[1][3] - lg_screenRect.y;
+
+	float centerX = lg_screenRect.x * input.positionCS.w;
+	float centerY = lg_screenRect.y * input.positionCS.w;
+	float tileWParam = lg_screenRect.z * input.positionCS.w;
+	float tileHParam = lg_screenRect.w * input.positionCS.w;
+
+/*	if(  input.positionCS.y >= 1000.0 )
+	{
+		discard;
+	}
+	*/
 
 #endif
 

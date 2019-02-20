@@ -140,9 +140,15 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                     perCameraInfo.SetupDefault();
                 }
 
+                int depthValue = (info.renderMethod == LookingGlassRenderingInfo.RenderingMethod.RenderNormal) ? 0 : 32;
+
                 if (tileTexture == null || !tileTexture)
                 {
-                    tileTexture = new RenderTexture(info.renderTargetW, info.renderTargetH, 0);
+                    tileTexture = new RenderTexture(info.renderTargetW, info.renderTargetH, depthValue);
+                }else if( tileTexture.depth != depthValue)
+                {
+                    tileTexture.Release();
+                    tileTexture = new RenderTexture(info.renderTargetW, info.renderTargetH, depthValue);
                 }
 
                 // tile texture draw( changed by method)
