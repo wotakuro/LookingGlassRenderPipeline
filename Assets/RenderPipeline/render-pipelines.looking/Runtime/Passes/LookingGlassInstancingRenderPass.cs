@@ -54,8 +54,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             commandBuffer.SetRenderTarget(dstTiledTexture);
             commandBuffer.ClearRenderTarget(true, true, Color.black);
             context.ExecuteCommandBuffer(commandBuffer);
-            context.Submit();
-            commandBuffer.Clear();
 
             // setup 
             CalculateVpMatrixOffsetsAndTileRects(camera);

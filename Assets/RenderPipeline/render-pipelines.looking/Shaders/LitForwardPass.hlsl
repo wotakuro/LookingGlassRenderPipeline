@@ -163,12 +163,13 @@ Varyings LitPassVertex(Attributes input)
 	float tileHParam = lg_screenRect.w * output.positionCS.w;
 
 	output.positionCS.x  = clamp( output.positionCS.x  , 
-		centerX - tileWParam * 1.5,
-		centerX + tileWParam * 1.5);
+		centerX - tileWParam * 1.3,
+		centerX + tileWParam * 1.3);
 	output.positionCS.y  = clamp( output.positionCS.y  , 
-		centerY - tileHParam * 1.5,
-		centerY + tileHParam * 1.5);
+		centerY - tileHParam * 1.3,
+		centerY + tileHParam * 1.3);
 	// ============================
+	
 	UNITY_TRANSFER_INSTANCE_ID(input,output);
 #endif
 
@@ -179,19 +180,27 @@ Varyings LitPassVertex(Attributes input)
 half4 LitPassFragment(Varyings input) : SV_Target
 {
 #if LG_SINGLEPASS_INSTANCING
+
     UNITY_SETUP_INSTANCE_ID(input);
     float4 lg_screenRect = UNITY_ACCESS_INSTANCED_PROP(PerDrawLooking,LookingScreenRect);
+	float4 screenSize = float4(4096,4096,0,0);
 
-	float centerX = lg_screenRect.x * input.positionCS.w;
-	float centerY = lg_screenRect.y * input.positionCS.w;
-	float tileWParam = lg_screenRect.z * input.positionCS.w;
-	float tileHParam = lg_screenRect.w * input.positionCS.w;
+	float centerX = screenSize.x * (0.5 * lg_screenRect.x + 0.5);
+	float centerY = screenSize.y * (0.5 * -lg_screenRect.y + 0.5);
+	float tileWParam = screenSize.x * lg_screenRect.z * 0.5;
+	float tileHParam = screenSize.y * lg_screenRect.w * 0.5;
+	//
+	if( input.positionCS.x > centerX + tileWParam || input.positionCS.x < centerX - tileWParam){
+		discard;
+	}
+	if( lg_screenRect.y < 0.0 ){
+		//discard;
+	}
 
-/*	if(  input.positionCS.y >= 1000.0 )
+	if( input.positionCS.y > centerY + tileHParam || input.positionCS.y < centerY - tileHParam )
 	{
 		discard;
 	}
-	*/
 
 #endif
 

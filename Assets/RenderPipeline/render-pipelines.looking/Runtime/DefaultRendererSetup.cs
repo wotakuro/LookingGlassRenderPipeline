@@ -145,10 +145,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 if (tileTexture == null || !tileTexture)
                 {
                     tileTexture = new RenderTexture(info.renderTargetW, info.renderTargetH, depthValue);
-                }else if( tileTexture.depth != depthValue)
-                {
-                    tileTexture.Release();
-                    tileTexture = new RenderTexture(info.renderTargetW, info.renderTargetH, depthValue);
                 }
 
                 // tile texture draw( changed by method)
