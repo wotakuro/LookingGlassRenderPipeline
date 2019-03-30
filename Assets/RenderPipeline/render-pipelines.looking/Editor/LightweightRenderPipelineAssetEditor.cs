@@ -55,6 +55,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             public static GUIContent lgTileHeight = EditorGUIUtility.TrTextContent("tileHeight");
             public static GUIContent lgTileXNum = EditorGUIUtility.TrTextContent("tileXNum");
             public static GUIContent lgTileYNum = EditorGUIUtility.TrTextContent("tileYNum");
+            public static GUIContent lgRenderPat = EditorGUIUtility.TrTextContent("RenderType");
 
 
             // Dropdown menu options
@@ -113,10 +114,8 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         SerializedProperty m_lg_renderTargetH;
         SerializedProperty m_lg_tileX;
         SerializedProperty m_lg_tileY;
-        SerializedProperty m_lg_fov;
-        SerializedProperty m_lg_size;
-        SerializedProperty m_lg_nearClipFactor;
-        SerializedProperty m_lg_farClipFactor;
+        SerializedProperty m_lg_renderMethod;
+
 
         internal static LightRenderingMode selectedLightRenderingMode;
 
@@ -169,7 +168,8 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             m_lg_renderTargetW = serializedObject.FindProperty("m_lg_renderTargetW"); 
             m_lg_renderTargetH = serializedObject.FindProperty("m_lg_renderTargetH"); 
             m_lg_tileX = serializedObject.FindProperty("m_lg_tileX"); 
-            m_lg_tileY = serializedObject.FindProperty("m_lg_tileY"); 
+            m_lg_tileY = serializedObject.FindProperty("m_lg_tileY");
+            m_lg_renderMethod = serializedObject.FindProperty("m_lg_renderMethod");
         }
 
         void DrawGeneralSettings()
@@ -307,6 +307,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
                 EditorGUILayout.PropertyField(m_lg_tileX, Styles.lgTileXNum);
                 EditorGUILayout.PropertyField(m_lg_tileY, Styles.lgTileYNum);
+                EditorGUILayout.PropertyField(m_lg_renderMethod, Styles.lgRenderPat);
                 EditorGUI.indentLevel--;
                 EditorGUILayout.Space();
                 EditorGUILayout.Space();

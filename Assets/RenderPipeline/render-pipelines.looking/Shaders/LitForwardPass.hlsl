@@ -3,6 +3,26 @@
 
 #include "Assets/RenderPipeline/render-pipelines.looking/ShaderLibrary/Lighting.hlsl"
 
+// for looking glass
+#if LG_SINGLEPASS_INSTANCING
+	UNITY_INSTANCING_BUFFER_START(PerDrawLooking)
+		UNITY_DEFINE_INSTANCED_PROP(float4, LookingVPOffset)
+		UNITY_DEFINE_INSTANCED_PROP(float4, LookingScreenRect)
+		// debug
+		UNITY_DEFINE_INSTANCED_PROP(float4x4, LookingView)
+		UNITY_DEFINE_INSTANCED_PROP(float4x4, LookingProjection)
+		UNITY_DEFINE_INSTANCED_PROP(float4x4, LookingVP)
+	UNITY_INSTANCING_BUFFER_END(PerDrawLooking)
+
+
+CBUFFER_START(_LookingGlassBuffer)
+	float4 LookingQuiltSize;
+CBUFFER_END
+
+#endif
+//===================
+
+
 struct Attributes
 {
     float4 positionOS   : POSITION;
@@ -86,6 +106,23 @@ Varyings LitPassVertex(Attributes input)
     Varyings output = (Varyings)0;
 
     UNITY_SETUP_INSTANCE_ID(input);
+
+#if LG_SINGLEPASS_INSTANCING
+	float4 lg_vpOffset = UNITY_ACCESS_INSTANCED_PROP(PerDrawLooking,LookingVPOffset);
+	unity_MatrixV[0][3] -= lg_vpOffset.x;
+	unity_MatrixV[1][3] -= lg_vpOffset.y;
+	float4x4 matrixP = UNITY_MATRIX_P;
+	matrixP[0][2] -= lg_vpOffset.z;
+	matrixP[1][2] -= lg_vpOffset.w;
+	unity_MatrixVP = mul( matrixP , unity_MatrixV );
+#else
+	float4x4 matrixP = UNITY_MATRIX_P;
+	unity_MatrixVP = mul( matrixP , unity_MatrixV );
+
+#endif
+
+
+
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
     VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
@@ -125,12 +162,63 @@ Varyings LitPassVertex(Attributes input)
 
     output.positionCS = vertexInput.positionCS;
 
+#if LG_SINGLEPASS_INSTANCING
+
+	// Looking Glass Add
+	float4 lg_screenRect = UNITY_ACCESS_INSTANCED_PROP(PerDrawLooking,LookingScreenRect);
+
+	float centerX = lg_screenRect.x * output.positionCS.w;
+	float centerY = lg_screenRect.y * output.positionCS.w;
+
+	output.positionCS.x = output.positionCS.x * lg_screenRect.z + centerX;
+	output.positionCS.y = output.positionCS.y * lg_screenRect.w + centerY;
+	
+	float tileWParam = lg_screenRect.z * output.positionCS.w;
+	float tileHParam = lg_screenRect.w * output.positionCS.w;
+
+	output.positionCS.x  = clamp( output.positionCS.x  , 
+		centerX - tileWParam * 1.3,
+		centerX + tileWParam * 1.3);
+	output.positionCS.y  = clamp( output.positionCS.y  , 
+		centerY - tileHParam * 1.3,
+		centerY + tileHParam * 1.3);
+	// ============================
+	
+	UNITY_TRANSFER_INSTANCE_ID(input,output);
+#endif
+
     return output;
 }
 
 // Used in Standard (Physically Based) shader
 half4 LitPassFragment(Varyings input) : SV_Target
 {
+#if LG_SINGLEPASS_INSTANCING
+
+    UNITY_SETUP_INSTANCE_ID(input);
+    float4 lg_screenRect = UNITY_ACCESS_INSTANCED_PROP(PerDrawLooking,LookingScreenRect);
+	float4 screenSize = float4(LookingQuiltSize.x , LookingQuiltSize.y,0,0);
+
+	float centerX = screenSize.x * (0.5 * lg_screenRect.x + 0.5);
+	float centerY = screenSize.y * (0.5 * -lg_screenRect.y + 0.5);
+	float tileWParam = screenSize.x * lg_screenRect.z * 0.5;
+	float tileHParam = screenSize.y * lg_screenRect.w * 0.5;
+	//
+	if( input.positionCS.x > centerX + tileWParam || input.positionCS.x < centerX - tileWParam){
+		discard;
+	}
+	if( lg_screenRect.y < 0.0 ){
+		//discard;
+	}
+
+	if( input.positionCS.y > centerY + tileHParam || input.positionCS.y < centerY - tileHParam )
+	{
+		discard;
+	}
+
+#endif
+
+
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
     SurfaceData surfaceData;

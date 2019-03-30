@@ -34,12 +34,9 @@ MonoBehaviour:
   m_MixedLightingSupported: 0
   m_lg_renderTargetW: 4096
   m_lg_renderTargetH: 4096
-  m_lg_tileX: 4
-  m_lg_tileY: 8
-  m_lg_fov: 20
-  m_lg_size: 11.4
-  m_lg_nearClipFactor: 1.5
-  m_lg_farClipFactor: 1.5
+  m_lg_tileX: 5
+  m_lg_tileY: 4
+  m_lg_renderMethod: 0
   m_ShadowType: 1
   m_LocalShadowsSupported: 0
   m_LocalShadowsAtlasResolution: 256

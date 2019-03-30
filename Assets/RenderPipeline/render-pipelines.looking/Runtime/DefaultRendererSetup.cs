@@ -18,6 +18,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         private FinalBlitPass m_FinalBlitPass;
 
         private LookingGlassMultiTextureRenderer m_LookingMultiTexturePass;
+        private LookingGlassInstancingRenderPass m_LookingInstancingRenderPass;
         private LookingGlassFinalOutput m_LookingFinalPass;
 
 #if UNITY_EDITOR
@@ -54,6 +55,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             m_FinalBlitPass = new FinalBlitPass();
 
             m_LookingMultiTexturePass = new LookingGlassMultiTextureRenderer();
+            m_LookingInstancingRenderPass = new LookingGlassInstancingRenderPass();
             m_LookingFinalPass = new LookingGlassFinalOutput();
 
 #if UNITY_EDITOR
@@ -71,6 +73,9 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             m_Initialized = true;
 
         }
+
+        private LookingGlassRenderingInfo oldLookingRenderInfo;
+
 
         public void Setup(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
@@ -138,16 +143,36 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                     perCameraInfo.SetupDefault();
                 }
 
-                if (tileTexture == null || !tileTexture)
+                int depthValue = (info.renderMethod == LookingGlassRenderingInfo.RenderingMethod.RenderMultiPass) ? 0 : 32;
+                if( tileTexture != null && oldLookingRenderInfo.HaveToRemakeRenderTexture( ref info) )
                 {
-                    tileTexture = new RenderTexture(info.renderTargetW, info.renderTargetH, 0);
+                    tileTexture.Release();
+                    tileTexture = null;
                 }
 
-                m_LookingMultiTexturePass.Setup(tileTexture,ref info,ref perCameraInfo);
-                renderer.EnqueuePass(m_LookingMultiTexturePass);
+                if (tileTexture == null || !tileTexture)
+                {
+                    tileTexture = new RenderTexture(info.renderTargetW, info.renderTargetH, depthValue);
+                    tileTexture.name = "LookingGlassQuiltTexture";
+                }
+
+                // tile texture draw( changed by method)
+                switch (info.renderMethod)
+                {
+                    case LookingGlassRenderingInfo.RenderingMethod.RenderMultiPass:
+                        m_LookingMultiTexturePass.Setup(tileTexture, ref info, ref perCameraInfo);
+                        renderer.EnqueuePass(m_LookingMultiTexturePass);
+                        break;
+                    case LookingGlassRenderingInfo.RenderingMethod.RenderSinglePassInstancing:
+                        m_LookingInstancingRenderPass.Setup(tileTexture, ref info, ref perCameraInfo);
+                        renderer.EnqueuePass(m_LookingInstancingRenderPass);
+                        break;
+                }
 
                 m_LookingFinalPass.SetUp(colorHandle, tileTexture, ref info,ref config);
                 renderer.EnqueuePass(m_LookingFinalPass);
+                // info setup
+                oldLookingRenderInfo = info;
             }
             // SceneView
             else
@@ -167,7 +192,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                     renderer.EnqueuePass(m_FinalBlitPass);
                 }
             }
-
 
 #if UNITY_EDITOR
             if (renderingData.cameraData.isSceneViewCamera)
@@ -190,6 +214,27 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             //bool msaaDepthResolve = msaaEnabledForCamera && SystemInfo.supportsMultisampledTextures != 0;
             bool msaaDepthResolve = false;
             return supportsDepthCopy || msaaDepthResolve;
+        }
+
+        private void SaveRenderTexture(RenderTexture renderTexture,string file)
+        {
+            if( System.IO.File.Exists(file + ".png"))
+            {
+                return;
+            }
+
+            Texture2D tex = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
+            RenderTexture.active = renderTexture;
+            tex.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+            tex.Apply();
+
+            // Encode texture into PNG
+            byte[] bytes = tex.EncodeToPNG();
+            Object.DestroyImmediate(tex);
+
+            //Write to a file in the project folder
+            System.IO.File.WriteAllBytes( file + ".png", bytes);
+            Debug.Log(Application.dataPath);
         }
     }
 }
