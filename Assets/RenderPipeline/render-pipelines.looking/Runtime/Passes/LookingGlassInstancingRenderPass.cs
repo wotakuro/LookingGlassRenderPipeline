@@ -68,17 +68,20 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
             Shader.EnableKeyword(LgInstancingShaderKeyword);
             // todo メッシュ一覧取得周りの仕組みつくる
-
+            UnityEngine.Profiling.Profiler.BeginSample("Create List");
             var meshFilters = Resources.FindObjectsOfTypeAll<MeshFilter>();
-            foreach( var meshFilter in meshFilters)
+            UnityEngine.Profiling.Profiler.EndSample();
+            foreach ( var meshFilter in meshFilters)
             {
                 var meshRenderer = meshFilter.GetComponent<MeshRenderer>();
                 var mesh = meshFilter.sharedMesh;
                 if (mesh == null) { continue; }
+                if (!meshRenderer.enabled || !meshRenderer.gameObject.activeInHierarchy) { continue; }
+
                 if (meshRenderer == null || meshRenderer.sharedMaterial == null){ continue; }
                 var material = meshRenderer.sharedMaterial;
 
-                if(!material.enableInstancing)
+                if(!material.enableInstancing )
                 {
                     continue;
                 }
@@ -90,8 +93,12 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 commandBuffer.DrawMeshInstanced(mesh, 0, material, 0, this.m_RenderMatrix,
                     m_RenderMatrix.Length, materialPropertyBlock);
             }
+            UnityEngine.Profiling.Profiler.BeginSample("Execute List");
             context.ExecuteCommandBuffer(commandBuffer);
+            UnityEngine.Profiling.Profiler.EndSample();
+            UnityEngine.Profiling.Profiler.BeginSample("Context Submit");
             context.Submit();
+            UnityEngine.Profiling.Profiler.EndSample();
             commandBuffer.Clear();
 
             Shader.DisableKeyword(LgInstancingShaderKeyword);
