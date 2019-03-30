@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.LookingGlassPipeline;
 
-#if USE_HOLO_PLAY
+#if !DONT_USE_HOLO_PLAY
 using HoloPlay;
 #endif
 
@@ -14,7 +14,7 @@ namespace HoloPlayToLGRP
     {
         public void Start()
         {
-#if USE_HOLO_PLAY
+#if !DONT_USE_HOLO_PLAY
             LookingGlassCameraInfo cameraInfo = this.GetComponent<LookingGlassCameraInfo>();
             LookingGlassDeviceConfig dstConfig = cameraInfo.config;
 

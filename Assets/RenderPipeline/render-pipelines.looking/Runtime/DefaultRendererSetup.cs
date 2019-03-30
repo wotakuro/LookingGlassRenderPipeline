@@ -148,6 +148,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 {
                     tileTexture.Release();
                     tileTexture = null;
+                    Debug.Log("Recreate RenderTexture");
                 }
 
                 if (tileTexture == null || !tileTexture)
