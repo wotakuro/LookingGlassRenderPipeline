@@ -141,8 +141,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                         (j / (float)drawInfo.tileX) * 2.0f - 1.0f  + width ,
                         -((i / (float)drawInfo.tileY) * 2.0f - 1.0f  + height) ,
                         width  ,height  );
-
-//                    Debug.Log("counter: " +counter +";;"  + m_ScreenRectParam[counter]);
                     ++counter;
                 }
             }
