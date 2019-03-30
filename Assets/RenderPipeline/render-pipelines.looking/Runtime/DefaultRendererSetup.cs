@@ -74,6 +74,9 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
         }
 
+        private LookingGlassRenderingInfo oldLookingRenderInfo;
+
+
         public void Setup(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
             Init();
@@ -141,6 +144,12 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 }
 
                 int depthValue = (info.renderMethod == LookingGlassRenderingInfo.RenderingMethod.RenderMultiPass) ? 0 : 32;
+                if( tileTexture != null && oldLookingRenderInfo.HaveToRemakeRenderTexture( ref info) )
+                {
+                    Debug.Log("Changed TextureSetting");
+                    tileTexture.Release();
+                    tileTexture = null;
+                }
 
                 if (tileTexture == null || !tileTexture)
                 {
@@ -159,13 +168,11 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                         renderer.EnqueuePass(m_LookingInstancingRenderPass);
                         break;
                 }
-                if( true )
-                {
-                    //SaveRenderTexture(tileTexture,""+info.renderMethod);
-                }
 
                 m_LookingFinalPass.SetUp(colorHandle, tileTexture, ref info,ref config);
                 renderer.EnqueuePass(m_LookingFinalPass);
+                // info setup
+                oldLookingRenderInfo = info;
             }
             // SceneView
             else
@@ -185,7 +192,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                     renderer.EnqueuePass(m_FinalBlitPass);
                 }
             }
-
 
 #if UNITY_EDITOR
             if (renderingData.cameraData.isSceneViewCamera)

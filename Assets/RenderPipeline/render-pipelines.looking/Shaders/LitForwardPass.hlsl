@@ -13,6 +13,12 @@
 		UNITY_DEFINE_INSTANCED_PROP(float4x4, LookingProjection)
 		UNITY_DEFINE_INSTANCED_PROP(float4x4, LookingVP)
 	UNITY_INSTANCING_BUFFER_END(PerDrawLooking)
+
+
+CBUFFER_START(_LookingGlassBuffer)
+	float4 LookingQuiltSize;
+CBUFFER_END
+
 #endif
 //===================
 
@@ -191,7 +197,7 @@ half4 LitPassFragment(Varyings input) : SV_Target
 
     UNITY_SETUP_INSTANCE_ID(input);
     float4 lg_screenRect = UNITY_ACCESS_INSTANCED_PROP(PerDrawLooking,LookingScreenRect);
-	float4 screenSize = float4(4096,4096,0,0);
+	float4 screenSize = float4(LookingQuiltSize.x , LookingQuiltSize.y,0,0);
 
 	float centerX = screenSize.x * (0.5 * lg_screenRect.x + 0.5);
 	float centerY = screenSize.y * (0.5 * -lg_screenRect.y + 0.5);

@@ -48,7 +48,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
         public override void Execute(ScriptableRenderer renderer, ScriptableRenderContext context, ref RenderingData renderingData)
         {
             Camera camera = renderingData.cameraData.camera;
-            SetupCameraInfo(camera);
+            LookingGlassUtil.SetupCameraInfo(camera, perCameraInfo.fov, perCameraInfo.size, perCameraInfo.nearClipFactor, perCameraInfo.farClipFactor);
 
             // clear Tile Texture
             commandBuffer.SetRenderTarget(dstTiledTexture);
@@ -57,6 +57,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
             // setup 
             CalculateVpMatrixOffsetsAndTileRects(camera);
+            Shader.SetGlobalVector("LookingQuiltSize", new Vector4(dstTiledTexture.width,dstTiledTexture.height,0,0));
 
             MaterialPropertyBlock materialPropertyBlock = new MaterialPropertyBlock();
 
@@ -95,22 +96,8 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
             Shader.DisableKeyword(LgInstancingShaderKeyword);
         }
+        
 
-        private void SetupCameraInfo(Camera camera)
-        {
-            camera.fieldOfView = perCameraInfo.fov;
-            float adjustedDistance = GetAdjustedDistance(perCameraInfo.fov, perCameraInfo.size);
-            camera.nearClipPlane = adjustedDistance - perCameraInfo.nearClipFactor * perCameraInfo.size;
-            camera.farClipPlane = adjustedDistance + perCameraInfo.farClipFactor * perCameraInfo.size;
-
-            camera.transform.position = new Vector3(0, 0, -adjustedDistance);
-            camera.transform.localRotation = Quaternion.identity;
-        }
-
-        public static float GetAdjustedDistance(float fov,float size)
-        {
-            return size / Mathf.Tan(fov * 0.5f * Mathf.Deg2Rad);
-        }
 
 
         private void CalculateInstancingMatrix(ref Matrix4x4 origin)
@@ -148,7 +135,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             {
                 for (int j = 0; j < drawInfo.tileX; ++j)
                 {
-                    m_VpOffsetParam[counter] = GetVPMatrixOffsets(aspect , counter, tileNum);
+                    m_VpOffsetParam[counter] = LookingGlassUtil.GetVPMatrixOffsets(aspect ,perCameraInfo.fov,perCameraInfo.size, counter, tileNum);
 
                     m_ScreenRectParam[tileNum - counter -1] = new Vector4(
                         (j / (float)drawInfo.tileX) * 2.0f - 1.0f  + width ,
@@ -174,10 +161,10 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                     Matrix4x4 projMatrix = camera.projectionMatrix;
                     Matrix4x4 viewMatrix = camera.worldToCameraMatrix;
 
-                    float adjustedDistance = GetAdjustedDistance(perCameraInfo.fov, perCameraInfo.size);
+                    float adjustedDistance = LookingGlassUtil.GetAdjustedDistance(perCameraInfo.fov, perCameraInfo.size);
 
                     float verticalAngle = 0.0f;
-                    float horizontalAngle = AngleAtView(counter, tileNum);
+                    float horizontalAngle = LookingGlassUtil.AngleAtView(counter, tileNum);
 
                     float offsetX = adjustedDistance * Mathf.Tan(horizontalAngle * Mathf.Deg2Rad);
                     float offsetY = adjustedDistance * Mathf.Tan(verticalAngle * Mathf.Deg2Rad);
@@ -201,40 +188,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             materialPropertyBlock.SetMatrixArray("LookingVP", lookingVp);
         }
 
-
-        private Vector4 GetVPMatrixOffsets(float aspect ,int view, int numViews)
-        {
-            float adjustedDistance = GetAdjustedDistance(perCameraInfo.fov, perCameraInfo.size);
-
-            float verticalAngle = 0.0f;
-            float horizontalAngle = AngleAtView(view, numViews);
-
-            float offsetX = adjustedDistance * Mathf.Tan(horizontalAngle * Mathf.Deg2Rad);
-            float offsetY = adjustedDistance * Mathf.Tan(verticalAngle * Mathf.Deg2Rad);
-
-            Vector4 result = new Vector4(offsetX, offsetY,
-                offsetX / (perCameraInfo.size * aspect), offsetY / perCameraInfo.size);
-            return result;
-            // view matrix
-            /*
-            viewMatrix.m03 -= offsetX;
-            viewMatrix.m13 -= offsetY;
-
-            // proj matrix
-            projMatrix.m02 -= offsetX / (perCameraInfo.size * camera.aspect);
-            projMatrix.m12 -= offsetY / perCameraInfo.size;
-            */
-        }
-
-        public static float AngleAtView(int view, int numViews, float viewCone = 40.0f)
-        {
-            viewCone = Mathf.Abs(viewCone);
-
-            if (numViews <= 1)
-                return 0;
-
-            return -viewCone * 0.5f + (float)view / (numViews - 1f) * viewCone;
-        }
 
 
         public void Dispose()
