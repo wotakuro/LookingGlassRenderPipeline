@@ -137,10 +137,12 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 {
                     m_VpOffsetParam[counter] = LookingGlassUtil.GetVPMatrixOffsets(aspect ,perCameraInfo.fov,perCameraInfo.size, counter, tileNum);
 
-                    m_ScreenRectParam[tileNum - counter -1] = new Vector4(
+                    m_ScreenRectParam[counter] = new Vector4(
                         (j / (float)drawInfo.tileX) * 2.0f - 1.0f  + width ,
-                        (i / (float)drawInfo.tileY) * 2.0f -1.0f + height ,
+                        -((i / (float)drawInfo.tileY) * 2.0f - 1.0f  + height) ,
                         width  ,height  );
+
+//                    Debug.Log("counter: " +counter +";;"  + m_ScreenRectParam[counter]);
                     ++counter;
                 }
             }

@@ -326,6 +326,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9047452bd8c30004c93da1feddc237cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &837686715
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 837686717}
+  - component: {fileID: 837686716}
+  m_Layer: 0
+  m_Name: Unity
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &837686716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837686715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14780b0c5aef3bd48af2be12918855ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderSettings:
+  - {fileID: 11400000, guid: f6feddfa672b2d044b8f24652ea9e1a0, type: 2}
+  - {fileID: 11400000, guid: 9f23ce2b5148ea74bac0341b1d526c4a, type: 2}
+--- !u!4 &837686717
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837686715}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.0495725, y: -8.643051, z: 10.248301}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &850542174
 PrefabInstance:
   m_ObjectHideFlags: 0
