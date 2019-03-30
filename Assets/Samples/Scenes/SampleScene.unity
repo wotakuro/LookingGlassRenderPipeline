@@ -428,7 +428,7 @@ GameObject:
   - component: {fileID: 837686717}
   - component: {fileID: 837686716}
   m_Layer: 0
-  m_Name: Unity
+  m_Name: ConfigChanger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -536,6 +536,7 @@ GameObject:
   - component: {fileID: 1906176995}
   - component: {fileID: 1906176994}
   - component: {fileID: 1906176993}
+  - component: {fileID: 1906176997}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -615,3 +616,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: -97.696, y: -180, z: -0.000015258789}
+--- !u!114 &1906176997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906176992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08e227b2dbf91354e91c506a10671c06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  angle: 360

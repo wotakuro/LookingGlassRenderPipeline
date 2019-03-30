@@ -35,7 +35,7 @@ MonoBehaviour:
   m_lg_renderTargetW: 4096
   m_lg_renderTargetH: 4096
   m_lg_tileX: 5
-  m_lg_tileY: 4
+  m_lg_tileY: 9
   m_lg_renderMethod: 1
   m_ShadowType: 1
   m_LocalShadowsSupported: 0
