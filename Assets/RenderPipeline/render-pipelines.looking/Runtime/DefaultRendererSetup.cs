@@ -146,7 +146,6 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 int depthValue = (info.renderMethod == LookingGlassRenderingInfo.RenderingMethod.RenderMultiPass) ? 0 : 32;
                 if( tileTexture != null && oldLookingRenderInfo.HaveToRemakeRenderTexture( ref info) )
                 {
-                    Debug.Log("Changed TextureSetting");
                     tileTexture.Release();
                     tileTexture = null;
                 }
@@ -154,6 +153,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                 if (tileTexture == null || !tileTexture)
                 {
                     tileTexture = new RenderTexture(info.renderTargetW, info.renderTargetH, depthValue);
+                    tileTexture.name = "LookingGlassQuiltTexture";
                 }
 
                 // tile texture draw( changed by method)
