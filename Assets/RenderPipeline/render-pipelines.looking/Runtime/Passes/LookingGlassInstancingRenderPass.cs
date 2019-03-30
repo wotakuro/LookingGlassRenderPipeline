@@ -40,8 +40,8 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
             RegisterShaderPassName("LightweightForward");
             RegisterShaderPassName("SRPDefaultUnlit");
 
-
             commandBuffer = new CommandBuffer();
+            commandBuffer.name = "SingleInstance";
         }
 
 
@@ -62,6 +62,7 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
             materialPropertyBlock.SetVectorArray("LookingVPOffset", m_VpOffsetParam);
             materialPropertyBlock.SetVectorArray("LookingScreenRect", m_ScreenRectParam);
+            DebugSetup(camera, materialPropertyBlock);
 
 
             Shader.EnableKeyword(LgInstancingShaderKeyword);
@@ -156,6 +157,48 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
                     ++counter;
                 }
             }
+        }
+
+        private void DebugSetup(Camera camera,MaterialPropertyBlock materialPropertyBlock)
+        {
+
+            int tileNum = drawInfo.tileX * drawInfo.tileY;
+            Matrix4x4[] lookingView = new Matrix4x4[tileNum];
+            Matrix4x4[] lookingProjection = new Matrix4x4[tileNum];
+            Matrix4x4[] lookingVp = new Matrix4x4[tileNum];
+            int counter = 0;
+            for (int i = 0; i < drawInfo.tileY; ++i)
+            {
+                for (int j = 0; j < drawInfo.tileX; ++j)
+                {
+                    Matrix4x4 projMatrix = camera.projectionMatrix;
+                    Matrix4x4 viewMatrix = camera.worldToCameraMatrix;
+
+                    float adjustedDistance = GetAdjustedDistance(perCameraInfo.fov, perCameraInfo.size);
+
+                    float verticalAngle = 0.0f;
+                    float horizontalAngle = AngleAtView(counter, tileNum);
+
+                    float offsetX = adjustedDistance * Mathf.Tan(horizontalAngle * Mathf.Deg2Rad);
+                    float offsetY = adjustedDistance * Mathf.Tan(verticalAngle * Mathf.Deg2Rad);
+
+                    // view matrix
+                    viewMatrix.m03 -= offsetX;
+                    viewMatrix.m13 -= offsetY;
+
+                    // proj matrix
+                    projMatrix.m02 -= offsetX / (perCameraInfo.size * camera.aspect);
+                    projMatrix.m12 -= offsetY / perCameraInfo.size;
+
+                    lookingView[counter] = viewMatrix;
+                    lookingProjection[counter] = projMatrix;
+                    lookingVp[counter] = viewMatrix * projMatrix;
+                    ++ counter;
+                }
+            }
+            materialPropertyBlock.SetMatrixArray("LookingView", lookingView);
+            materialPropertyBlock.SetMatrixArray("LookingProjection", lookingProjection);
+            materialPropertyBlock.SetMatrixArray("LookingVP", lookingVp);
         }
 
 

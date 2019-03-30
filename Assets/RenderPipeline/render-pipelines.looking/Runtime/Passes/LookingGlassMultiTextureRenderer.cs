@@ -10,8 +10,8 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
     {
         public enum RenderingMethod:int
         {
-            RenderNormal = 0,
-            RenderInstancing = 1
+            RenderMultiPass = 0,
+            RenderSinglePassInstancing = 1
         }
 
         public int renderTargetW;
@@ -68,6 +68,8 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
 
             commandBuffer = new CommandBuffer();
+            commandBuffer.name = "MultiPassStep";
+
 
             m_OpaqueFilterSettings = new FilterRenderersSettings(true)
             {
@@ -131,11 +133,10 @@ namespace UnityEngine.Experimental.Rendering.LookingGlassPipeline
 
                     context.ExecuteCommandBuffer(commandBuffer);
                     context.Submit();
-                    commandBuffer.Clear();
                     ++counter;
                 }
             }
-
+            commandBuffer.Clear();
             RenderTexture.ReleaseTemporary(tempRenderTexture);
         }
         private void SetupCameraInfo(Camera camera)

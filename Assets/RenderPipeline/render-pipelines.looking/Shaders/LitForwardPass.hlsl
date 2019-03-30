@@ -8,6 +8,10 @@
 	UNITY_INSTANCING_BUFFER_START(PerDrawLooking)
 		UNITY_DEFINE_INSTANCED_PROP(float4, LookingVPOffset)
 		UNITY_DEFINE_INSTANCED_PROP(float4, LookingScreenRect)
+		// debug
+		UNITY_DEFINE_INSTANCED_PROP(float4x4, LookingView)
+		UNITY_DEFINE_INSTANCED_PROP(float4x4, LookingProjection)
+		UNITY_DEFINE_INSTANCED_PROP(float4x4, LookingVP)
 	UNITY_INSTANCING_BUFFER_END(PerDrawLooking)
 #endif
 //===================
@@ -101,10 +105,14 @@ Varyings LitPassVertex(Attributes input)
 	float4 lg_vpOffset = UNITY_ACCESS_INSTANCED_PROP(PerDrawLooking,LookingVPOffset);
 	unity_MatrixV[0][3] -= lg_vpOffset.x;
 	unity_MatrixV[1][3] -= lg_vpOffset.y;
-	float4x4 unity_MatrixP = UNITY_MATRIX_P;
-	unity_MatrixP[0][2] -= lg_vpOffset.z;
-	unity_MatrixP[1][2] -= lg_vpOffset.w;
-	unity_MatrixVP = mul( unity_MatrixP , unity_MatrixV );
+	float4x4 matrixP = UNITY_MATRIX_P;
+	matrixP[0][2] -= lg_vpOffset.z;
+	matrixP[1][2] -= lg_vpOffset.w;
+	unity_MatrixVP = mul( matrixP , unity_MatrixV );
+#else
+	float4x4 matrixP = UNITY_MATRIX_P;
+	unity_MatrixVP = mul( matrixP , unity_MatrixV );
+
 #endif
 
 
